@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Exercise01</string>
+    <string name="action_settings">Settings</string>
+    <string name="textViewRed">Red</string>
+    <string name="textViewGreen">Green</string>
+    <string name="textViewBlue">Blue</string>
+    <string name="checkBoxStr">Use Motion Sensors</string>
+    <string name="textViewColorPrev">Color Preview</string>
+    <string name="radioBtnBgC">Background Color</string>
+    <string name="radioBtnTC">Text Color</string>
+    <string name="radioBtnBC">Button Color</string>
+    <string name="radioBtnFABC">Floating Action Button Color</string>
+    <string name="button">Set Color</string>
+</resources>
