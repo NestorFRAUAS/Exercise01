@@ -11,12 +11,14 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-    public EditText editTextRed;
+    private EditText editTextRed, editTextGreen, editTextBlue;
+    private SeekBar seekBarRed, seekBarGreen, seekBarBlue;
 
-    public int editTxtRedNum;
+    private int editTextRedNum;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,11 +26,70 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Initializing objects for RGB preferences.
+        // First the EditTexts, because they come fist in layout.
         editTextRed = (EditText) findViewById(R.id.editTextRed);
+        editTextGreen = (EditText) findViewById(R.id.editTextGreen);
+        editTextBlue = (EditText) findViewById(R.id.editTextBlue);
 
+        // Initializing SeekBars.
+        seekBarRed = (SeekBar) findViewById(R.id.seekBarRed);
+        seekBarGreen = (SeekBar) findViewById(R.id.seekBarGreen);
+        seekBarBlue = (SeekBar) findViewById(R.id.seekBarBlue);
+
+        seekBarRed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                editTextRed.setText("" + i);
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        seekBarGreen.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                editTextGreen.setText("" + i);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        seekBarBlue.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                editTextBlue.setText("" + i);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     TextWatcher txtWatch = new TextWatcher() {
+
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -40,15 +101,26 @@ public class MainActivity extends AppCompatActivity {
                 int number = Integer.parseInt(editTextRed.getText().toString());
                 if(number >= 0 && number <= 255){
                     editTxtRedNum = number;
+                    editTextRed.setText("" + editTxtRedNum);
                 }
                 else {
-                    Toast.makeText(MainActivity.this, "Allowed numbers are within range 0 to 255. ", Toast.LENGTH_LONG).show();
+                    if(number < 0) {
+                        editTxtRedNum = 0;
+                        editTextRed.setText("" + editTxtRedNum);
+
+                    }
+                    if(number > 255) {
+                        editTxtRedNum = 255;
+                        editTextRed.setText("" + editTxtRedNum);
+                    }
                 }
+
             }
         }
 
         @Override
         public void afterTextChanged(Editable editable) {
+            editTextRed.setText("" + editTxtRedNum);
         }
     };
 
