@@ -14,13 +14,15 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+{
     private EditText editTextRed, editTextGreen, editTextBlue;
     private SeekBar seekBarRed, seekBarGreen, seekBarBlue;
 
     private int editTextRedNum, editTextGreenNum, editTextBlueNum;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -37,31 +39,38 @@ public class MainActivity extends AppCompatActivity {
         seekBarGreen = (SeekBar) findViewById(R.id.seekBarGreen);
         seekBarBlue = (SeekBar) findViewById(R.id.seekBarBlue);
 
-        editTextRed.addTextChangedListener(new TextWatcher() {
+        editTextRed.addTextChangedListener(new TextWatcher()
+        {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(Integer.parseInt(editTextRed.getText().toString()) >= 0
-                        && Integer.parseInt(editTextRed.getText().toString()) < 256)
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+                if (!editTextRed.getText().toString().isEmpty())
                 {
-                    editTextRedNum = Integer.parseInt(editTextRed.getText().toString());
-                    seekBarRed.setProgress(editTextRedNum);
-                }
-
-                else
+                    if (Integer.parseInt(editTextRed.getText().toString()) >= 0
+                            && Integer.parseInt(editTextRed.getText().toString()) < 256)
                     {
+                        editTextRedNum = Integer.parseInt(editTextRed.getText().toString());
                         seekBarRed.setProgress(editTextRedNum);
                     }
+                    else
+                        {
+                        seekBarRed.setProgress(editTextRedNum);
+                        }
 
+                }
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
-                if(Integer.parseInt(editTextRed.getText().toString()) > 255){
+            public void afterTextChanged(Editable editable)
+            {
+                if(Integer.parseInt(editTextRed.getText().toString()) > 255)
+                {
                     editTextRedNum = 255;
                     editTextRed.setText(""+ editTextRedNum);
                 }
@@ -69,34 +78,37 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        editTextGreen.addTextChangedListener(new TextWatcher() {
+        editTextGreen.addTextChangedListener(new TextWatcher()
+        {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+                if (!editTextGreen.getText().toString().isEmpty()) {
 
-                if(Integer.parseInt(editTextGreen.getText().toString()) >= 0
-                        && Integer.parseInt(editTextGreen.getText().toString()) < 256)
-                {
-                    editTextGreenNum = Integer.parseInt(editTextGreen.getText().toString());
-                    seekBarGreen.setProgress(editTextGreenNum);
-                }
-
-                else
-                    {
+                    if (Integer.parseInt(editTextGreen.getText().toString()) >= 0
+                            && Integer.parseInt(editTextGreen.getText().toString()) < 256) {
+                        editTextGreenNum = Integer.parseInt(editTextGreen.getText().toString());
+                        seekBarGreen.setProgress(editTextGreenNum);
+                    } else {
                         editTextGreenNum = 255;
                         seekBarGreen.setProgress(editTextGreenNum);
 
                     }
 
+                }
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
-                if(Integer.parseInt(editTextGreen.getText().toString()) > 255){
+            public void afterTextChanged(Editable editable)
+            {
+                if(Integer.parseInt(editTextGreen.getText().toString()) > 255)
+                {
                     editTextGreenNum = 255;
                     editTextGreen.setText(""+ editTextGreenNum);
                 }
@@ -104,27 +116,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        editTextBlue.addTextChangedListener(new TextWatcher() {
+        editTextBlue.addTextChangedListener(new TextWatcher()
+        {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
 
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(Integer.parseInt(editTextBlue.getText().toString()) >= 0
-                        && Integer.parseInt(editTextBlue.getText().toString()) < 256)
-                {
-                    editTextBlueNum = Integer.parseInt(editTextBlue.getText().toString());
-                    seekBarBlue.setProgress(editTextBlueNum);
-                }
-
-                else
-                    {
+                if (!editTextBlue.getText().toString().isEmpty()) {
+                    if (Integer.parseInt(editTextBlue.getText().toString()) >= 0
+                            && Integer.parseInt(editTextBlue.getText().toString()) < 256) {
+                        editTextBlueNum = Integer.parseInt(editTextBlue.getText().toString());
+                        seekBarBlue.setProgress(editTextBlueNum);
+                    } else {
                         editTextBlueNum = 255;
                         seekBarBlue.setProgress(editTextBlueNum);
                     }
 
+                }
             }
 
             @Override
