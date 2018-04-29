@@ -88,41 +88,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    TextWatcher txtWatch = new TextWatcher() {
-
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            if(editTextRed.getText().length()>=1){
-                int number = Integer.parseInt(editTextRed.getText().toString());
-                if(number >= 0 && number <= 255){
-                    editTxtRedNum = number;
-                    editTextRed.setText("" + editTxtRedNum);
-                }
-                else {
-                    if(number < 0) {
-                        editTxtRedNum = 0;
-                        editTextRed.setText("" + editTxtRedNum);
-
-                    }
-                    if(number > 255) {
-                        editTxtRedNum = 255;
-                        editTextRed.setText("" + editTxtRedNum);
-                    }
-                }
-
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-            editTextRed.setText("" + editTxtRedNum);
-        }
-    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
