@@ -1,5 +1,7 @@
 package com.example.roggenbuck.exercise01;
 
+import android.app.IntentService;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,16 +12,25 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
 {
     private EditText editTextRed, editTextGreen, editTextBlue;
     private SeekBar seekBarRed, seekBarGreen, seekBarBlue;
+    private RadioGroup rgr;
+    private RadioButton rdBgC, rdTc, rdBc,rdFABC;
+    private Button btn;
+    private TextView textView;
 
     private int editTextRedNum, editTextGreenNum, editTextBlueNum;
+    private String whichLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -27,6 +38,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        whichLayout = null;
 
         // Initializing objects for RGB preferences.
         // First the EditTexts, because they come fist in layout.
@@ -50,7 +63,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
             {
-                if (!editTextRed.getText().toString().isEmpty())
+                try
                 {
                     if (Integer.parseInt(editTextRed.getText().toString()) >= 0
                             && Integer.parseInt(editTextRed.getText().toString()) < 256)
@@ -63,18 +76,25 @@ public class MainActivity extends AppCompatActivity
                         seekBarRed.setProgress(editTextRedNum);
                         }
 
+                }catch (Exception e)
+                {
+
                 }
             }
 
             @Override
             public void afterTextChanged(Editable editable)
             {
-                if(Integer.parseInt(editTextRed.getText().toString()) > 255)
+                try {
+                    if (Integer.parseInt(editTextRed.getText().toString()) > 255) {
+                        editTextRedNum = 255;
+                        editTextRed.setText("" + editTextRedNum);
+                    }
+                    editTextRed.setSelection(editTextRed.length());
+                } catch (Exception e)
                 {
-                    editTextRedNum = 255;
-                    editTextRed.setText(""+ editTextRedNum);
+
                 }
-                editTextRed.setSelection(editTextRed.length());
             }
         });
 
@@ -89,7 +109,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
             {
-                if (!editTextGreen.getText().toString().isEmpty()) {
+                try {
 
                     if (Integer.parseInt(editTextGreen.getText().toString()) >= 0
                             && Integer.parseInt(editTextGreen.getText().toString()) < 256) {
@@ -101,18 +121,25 @@ public class MainActivity extends AppCompatActivity
 
                     }
 
+                }catch (Exception e)
+                {
+
                 }
             }
 
             @Override
-            public void afterTextChanged(Editable editable)
-            {
-                if(Integer.parseInt(editTextGreen.getText().toString()) > 255)
-                {
-                    editTextGreenNum = 255;
-                    editTextGreen.setText(""+ editTextGreenNum);
+            public void afterTextChanged(Editable editable) {
+                try {
+
+
+                    if (Integer.parseInt(editTextGreen.getText().toString()) > 255) {
+                        editTextGreenNum = 255;
+                        editTextGreen.setText("" + editTextGreenNum);
+                    }
+                    editTextGreen.setSelection(editTextGreen.length());
+                } catch (Exception e) {
+
                 }
-                editTextGreen.setSelection(editTextGreen.length());
             }
         });
 
@@ -126,7 +153,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!editTextBlue.getText().toString().isEmpty()) {
+                try {
                     if (Integer.parseInt(editTextBlue.getText().toString()) >= 0
                             && Integer.parseInt(editTextBlue.getText().toString()) < 256) {
                         editTextBlueNum = Integer.parseInt(editTextBlue.getText().toString());
@@ -136,16 +163,27 @@ public class MainActivity extends AppCompatActivity
                         seekBarBlue.setProgress(editTextBlueNum);
                     }
 
+                }catch (Exception e)
+                {
+
                 }
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if(Integer.parseInt(editTextBlue.getText().toString()) > 255){
-                    editTextBlueNum = 255;
-                    editTextBlue.setText(""+ editTextBlueNum);
+                try {
+
+
+                    if (Integer.parseInt(editTextBlue.getText().toString()) > 255) {
+                        editTextBlueNum = 255;
+                        editTextBlue.setText("" + editTextBlueNum);
+                    }
+
+                    editTextBlue.setSelection(editTextBlue.length());
+                }catch (Exception e) {
+
                 }
-                editTextBlue.setSelection(editTextBlue.length());
+
             }
         });
 
@@ -200,6 +238,37 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+
+        // Handling RadioGroup / RadioButtons
+        rgr = findViewById(R.id.radioGroup);
+
+        rdBc = findViewById(R.id.radioBtnBC);
+        rdBgC = findViewById(R.id.radioBtnBgC);
+        rdTc = findViewById(R.id.radioBtnTC);
+        rdFABC = findViewById(R.id.radioBtnFABC);
+
+        rgr.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                switch (i) {
+                    case R.id.radioBtnBgC:
+                        whichLayout = getString(R.string.radioBtnBgC);
+                        break;
+
+                    case R.id.radioBtnTC:
+                        whichLayout = getString(R.string.radioBtnTC);
+                        break;
+                    case R.id.radioBtnBC:
+                        whichLayout = getString(R.string.radioBtnBC);
+                        break;
+                    case R.id.radioBtnFABC:
+                        whichLayout = getString(R.string.radioBtnFABC);
+                }
+
+            }
+        });
+
+        btn = findViewById(R.id.button);
     }
 
 
@@ -224,5 +293,43 @@ public class MainActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setColor(View view) {
+        String color = convertColorsToHex();
+        switch (whichLayout){
+            case "Background Color":
+
+                break;
+            case "Text Color":
+                break;
+            case "Button Color":
+                btn.setBackgroundColor(Color.parseColor(color));
+                break;
+            case "Floating Action Button Color":
+                break;
+        }
+    }
+
+    public String convertColorsToHex(){
+        int red, green, blue;
+        String hexRed, hexGreen, hexBlue, hexColorCode;
+        red = Integer.parseInt(editTextRed.getText().toString());
+        green = Integer.parseInt(editTextGreen.getText().toString());
+        blue = Integer.parseInt(editTextBlue.getText().toString());
+        hexRed = Integer.toHexString(red);
+        hexGreen = Integer.toHexString(green);
+        hexBlue = Integer.toHexString(blue);
+        if(red<16){
+            hexRed = "0" + hexRed;
+        }
+        if(green<16){
+            hexGreen = "0" + hexGreen;
+        }
+        if(blue<16){
+            hexBlue = "0" + hexBlue;
+        }
+        hexColorCode = "#" + hexRed + hexGreen + hexBlue;
+        return hexColorCode;
     }
 }
