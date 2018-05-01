@@ -1,7 +1,10 @@
 package com.example.roggenbuck.exercise01;
 
 import android.app.IntentService;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
@@ -28,8 +32,10 @@ public class MainActivity extends AppCompatActivity
     private RadioButton rdBgC, rdTc, rdBc,rdFABC;
     private Button btn;
     private TextView textView;
+    private FloatingActionButton fab;
 
     private int editTextRedNum, editTextGreenNum, editTextBlueNum;
+    private int red, green, blue;
     private String whichLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -59,6 +65,8 @@ public class MainActivity extends AppCompatActivity
         editTextRed.setText("0");
         editTextBlue.setText("0");
         editTextGreen.setText("0");
+
+        fab = findViewById(R.id.floatingActionButton);
 
         editTextRed.addTextChangedListener(new TextWatcher()
         {
@@ -328,7 +336,6 @@ public class MainActivity extends AppCompatActivity
         try {
             switch (whichLayout) {
                 case "Background Color":
-
                     break;
                 case "Text Color":
                     break;
@@ -336,6 +343,10 @@ public class MainActivity extends AppCompatActivity
                     btn.setBackgroundColor(Color.parseColor(color));
                     break;
                 case "Floating Action Button Color":
+                    //fab.setColorFilter(Color.parseColor(color));
+                    //fab.getBackground().setColorFilter(Color.parseColor(color));
+                    fab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(color)));
+
                     break;
             }
         }catch (Exception e)
@@ -347,7 +358,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     public String convertColorsToHex(){
-        int red, green, blue;
         String hexRed, hexGreen, hexBlue, hexColorCode;
         red = Integer.parseInt(editTextRed.getText().toString());
         green = Integer.parseInt(editTextGreen.getText().toString());
