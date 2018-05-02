@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity
     private Button btn;
     private TextView textView;
     private FloatingActionButton fab;
-
+    private CheckBox checkBox;
     private int editTextRedNum, editTextGreenNum, editTextBlueNum;
     private int red, green, blue;
     private int opRed, opGreen, opBlue;
@@ -62,6 +63,9 @@ public class MainActivity extends AppCompatActivity
         seekBarGreen = (SeekBar) findViewById(R.id.seekBarGreen);
         seekBarBlue = (SeekBar) findViewById(R.id.seekBarBlue);
 
+        // Initializing the CheckBox
+        checkBox = findViewById(R.id.checkBox);
+
         // TODO Shared Preferences
         editTextRed.setText("0");
         editTextBlue.setText("0");
@@ -87,6 +91,7 @@ public class MainActivity extends AppCompatActivity
                     {
                         String color = convertColorsToHex();
                         String opColor = inverseColor(color);
+                        opColor = isAGrayColor(opColor);
                         textView.setBackgroundColor(Color.parseColor(color));
                         textView.setTextColor(Color.parseColor(opColor));
                         editTextRedNum = Integer.parseInt(editTextRed.getText().toString());
@@ -112,7 +117,10 @@ public class MainActivity extends AppCompatActivity
                         editTextRed.setText("" + editTextRedNum);
                     }
                     String color = convertColorsToHex();
+                    String opColor = inverseColor(color);
+                    opColor = isAGrayColor(opColor);
                     textView.setBackgroundColor(Color.parseColor(color));
+                    textView.setTextColor(Color.parseColor(opColor));
 
                     editTextRed.setSelection(editTextRed.length());
                 } catch (Exception e)
@@ -138,12 +146,17 @@ public class MainActivity extends AppCompatActivity
                     if (Integer.parseInt(editTextGreen.getText().toString()) >= 0
                             && Integer.parseInt(editTextGreen.getText().toString()) < 256) {
                         String color = convertColorsToHex();
+                        String opColor = inverseColor(color);
+                        opColor = isAGrayColor(opColor);
                         textView.setBackgroundColor(Color.parseColor(color));
+                        textView.setTextColor(Color.parseColor(opColor));
                         editTextGreenNum = Integer.parseInt(editTextGreen.getText().toString());
                         seekBarGreen.setProgress(editTextGreenNum);
                     } else {
                         String color = convertColorsToHex();
+                        String opColor = inverseColor(color);
                         textView.setBackgroundColor(Color.parseColor(color));
+                        textView.setTextColor(Color.parseColor(opColor));
                         editTextGreenNum = 255;
                         seekBarGreen.setProgress(editTextGreenNum);
 
@@ -165,7 +178,10 @@ public class MainActivity extends AppCompatActivity
                         editTextGreen.setText("" + editTextGreenNum);
                     }
                     String color = convertColorsToHex();
+                    String opColor = inverseColor(color);
+                    opColor = isAGrayColor(opColor);
                     textView.setBackgroundColor(Color.parseColor(color));
+                    textView.setTextColor(Color.parseColor(opColor));
                     editTextGreen.setSelection(editTextGreen.length());
                 } catch (Exception e) {
 
@@ -187,7 +203,10 @@ public class MainActivity extends AppCompatActivity
                     if (Integer.parseInt(editTextBlue.getText().toString()) >= 0
                             && Integer.parseInt(editTextBlue.getText().toString()) < 256) {
                         String color = convertColorsToHex();
+                        String opColor = inverseColor(color);
+                        opColor = isAGrayColor(opColor);
                         textView.setBackgroundColor(Color.parseColor(color));
+                        textView.setTextColor(Color.parseColor(opColor));
                         editTextBlueNum = Integer.parseInt(editTextBlue.getText().toString());
                         seekBarBlue.setProgress(editTextBlueNum);
                     } else {
@@ -211,7 +230,10 @@ public class MainActivity extends AppCompatActivity
                         editTextBlue.setText("" + editTextBlueNum);
                     }
                     String color = convertColorsToHex();
+                    String opColor = inverseColor(color);
+                    opColor = isAGrayColor(opColor);
                     textView.setBackgroundColor(Color.parseColor(color));
+                    textView.setTextColor(Color.parseColor(opColor));
                     editTextBlue.setSelection(editTextBlue.length());
                 }catch (Exception e) {
 
@@ -225,9 +247,15 @@ public class MainActivity extends AppCompatActivity
         seekBarRed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                editTextRed.setText("" + i);
-                String color = convertColorsToHex();
-                textView.setBackgroundColor(Color.parseColor(color));
+                if(b)
+                {
+                    editTextRed.setText("" + i);
+                    String color = convertColorsToHex();
+                    String opColor = inverseColor(color);
+                    opColor = isAGrayColor(opColor);
+                    textView.setBackgroundColor(Color.parseColor(color));
+                    textView.setTextColor(Color.parseColor(opColor));
+                }
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -243,9 +271,15 @@ public class MainActivity extends AppCompatActivity
         seekBarGreen.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                editTextGreen.setText("" + i);
-                String color = convertColorsToHex();
-                textView.setBackgroundColor(Color.parseColor(color));
+                if(b)
+                {
+                    editTextGreen.setText("" + i);
+                    String color = convertColorsToHex();
+                    String opColor = inverseColor(color);
+                    opColor = isAGrayColor(opColor);
+                    textView.setBackgroundColor(Color.parseColor(color));
+                    textView.setTextColor(Color.parseColor(opColor));
+                }
             }
 
             @Override
@@ -262,9 +296,15 @@ public class MainActivity extends AppCompatActivity
         seekBarBlue.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                editTextBlue.setText("" + i);
-                String color = convertColorsToHex();
-                textView.setBackgroundColor(Color.parseColor(color));
+                if(b)
+                {
+                    editTextBlue.setText("" + i);
+                    String color = convertColorsToHex();
+                    String opColor = inverseColor(color);
+                    opColor = isAGrayColor(opColor);
+                    textView.setBackgroundColor(Color.parseColor(color));
+                    textView.setTextColor(Color.parseColor(opColor));
+                }
             }
 
             @Override
@@ -341,13 +381,17 @@ public class MainActivity extends AppCompatActivity
                 case "Background Color":
                     break;
                 case "Text Color":
+                    String opColor = inverseColor(color);
+                    rdFABC.setTextColor(Color.parseColor(opColor));
+                    rdTc.setTextColor(Color.parseColor(opColor));
+                    rdBgC.setTextColor(Color.parseColor(opColor));
+                    rdBc.setTextColor(Color.parseColor(opColor));
+                    checkBox.setTextColor(Color.parseColor(opColor));
                     break;
                 case "Button Color":
                     btn.setBackgroundColor(Color.parseColor(color));
                     break;
                 case "Floating Action Button Color":
-                    //fab.setColorFilter(Color.parseColor(color));
-                    //fab.getBackground().setColorFilter(Color.parseColor(color));
                     fab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(color)));
 
                     break;
@@ -383,9 +427,9 @@ public class MainActivity extends AppCompatActivity
 
     public String inverseColor(String originColor){
         String hexRed, hexGreen, hexBlue, hexColorCode;
-        opRed = 16 - red;
-        opGreen = 16 - green;
-        opBlue = 16 - blue;
+        opRed = 255 - red;
+        opGreen = 255 - green;
+        opBlue = 255 - blue;
 
         hexRed = Integer.toHexString(opRed);
         hexGreen = Integer.toHexString(opGreen);
@@ -401,5 +445,20 @@ public class MainActivity extends AppCompatActivity
         }
         hexColorCode = "#" + hexRed + hexGreen + hexBlue;
         return hexColorCode;
+    }
+
+    public String isAGrayColor(String color)
+    {
+        if(opRed == opBlue && opBlue == opGreen
+                && opRed > 59 && opRed < 159)
+        {
+            return "#FFFFFF";
+        }
+        if(opRed == opBlue && opBlue == opGreen
+                && opRed > 159 && opRed < 255)
+        {
+            return "#000000";
+        }
+        return color;
     }
 }
