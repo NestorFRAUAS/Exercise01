@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity
 
     private int editTextRedNum, editTextGreenNum, editTextBlueNum;
     private int red, green, blue;
+    private int opRed, opGreen, opBlue;
     private String whichLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -85,7 +86,9 @@ public class MainActivity extends AppCompatActivity
                             && Integer.parseInt(editTextRed.getText().toString()) < 256)
                     {
                         String color = convertColorsToHex();
+                        String opColor = inverseColor(color);
                         textView.setBackgroundColor(Color.parseColor(color));
+                        textView.setTextColor(Color.parseColor(opColor));
                         editTextRedNum = Integer.parseInt(editTextRed.getText().toString());
                         seekBarRed.setProgress(editTextRedNum);
                     }
@@ -372,6 +375,28 @@ public class MainActivity extends AppCompatActivity
             hexGreen = "0" + hexGreen;
         }
         if(blue<16){
+            hexBlue = "0" + hexBlue;
+        }
+        hexColorCode = "#" + hexRed + hexGreen + hexBlue;
+        return hexColorCode;
+    }
+
+    public String inverseColor(String originColor){
+        String hexRed, hexGreen, hexBlue, hexColorCode;
+        opRed = 16 - red;
+        opGreen = 16 - green;
+        opBlue = 16 - blue;
+
+        hexRed = Integer.toHexString(opRed);
+        hexGreen = Integer.toHexString(opGreen);
+        hexBlue = Integer.toHexString(opBlue);
+        if(opRed<16){
+            hexRed = "0" + hexRed;
+        }
+        if(opGreen<16){
+            hexGreen = "0" + hexGreen;
+        }
+        if(opBlue<16){
             hexBlue = "0" + hexBlue;
         }
         hexColorCode = "#" + hexRed + hexGreen + hexBlue;
