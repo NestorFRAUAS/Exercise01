@@ -1,14 +1,12 @@
 package com.example.roggenbuck.exercise01;
 
-import android.app.IntentService;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -19,7 +17,6 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
@@ -28,6 +25,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
 {
+    private SharedPreferences sharedPreferences;
     private ConstraintLayout constraintLayout;
     private EditText editTextRed, editTextGreen, editTextBlue;
     private SeekBar seekBarRed, seekBarGreen, seekBarBlue;
@@ -37,13 +35,14 @@ public class MainActivity extends AppCompatActivity
     private TextView textView;
     private FloatingActionButton fab;
     private CheckBox checkBox;
-    private int editTextRedNum, editTextGreenNum, editTextBlueNum;
+    private Boolean checkboxChecked;
     private int red, green, blue;
     private int opRed, opGreen, opBlue;
     private String whichLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -86,7 +85,6 @@ public class MainActivity extends AppCompatActivity
 
             }
 
-
             /*
             What happens, if text text is changed. EditText and Seekbar of the same
             color need to be synchronized.
@@ -104,12 +102,12 @@ public class MainActivity extends AppCompatActivity
                         opColor = isAGrayColor(opColor);
                         textView.setBackgroundColor(Color.parseColor(color));
                         textView.setTextColor(Color.parseColor(opColor));
-                        editTextRedNum = Integer.parseInt(editTextRed.getText().toString());
-                        seekBarRed.setProgress(editTextRedNum);
+                        red = Integer.parseInt(editTextRed.getText().toString());
+                        seekBarRed.setProgress(red);
                     }
                     else
                         {
-                        seekBarRed.setProgress(editTextRedNum);
+                        seekBarRed.setProgress(red);
                         }
 
                 }catch (Exception e)
@@ -123,8 +121,8 @@ public class MainActivity extends AppCompatActivity
             {
                 try {
                     if (Integer.parseInt(editTextRed.getText().toString()) > 255) {
-                        editTextRedNum = 255;
-                        editTextRed.setText("" + editTextRedNum);
+                        red = 255;
+                        editTextRed.setText("" + red);
                     }
                     String color = convertColorsToHex();
                     String opColor = inverseColor(color);
@@ -160,15 +158,15 @@ public class MainActivity extends AppCompatActivity
                         opColor = isAGrayColor(opColor);
                         textView.setBackgroundColor(Color.parseColor(color));
                         textView.setTextColor(Color.parseColor(opColor));
-                        editTextGreenNum = Integer.parseInt(editTextGreen.getText().toString());
-                        seekBarGreen.setProgress(editTextGreenNum);
+                        green = Integer.parseInt(editTextGreen.getText().toString());
+                        seekBarGreen.setProgress(green);
                     } else {
                         String color = convertColorsToHex();
                         String opColor = inverseColor(color);
                         textView.setBackgroundColor(Color.parseColor(color));
                         textView.setTextColor(Color.parseColor(opColor));
-                        editTextGreenNum = 255;
-                        seekBarGreen.setProgress(editTextGreenNum);
+                        green = 255;
+                        seekBarGreen.setProgress(green);
 
                     }
 
@@ -184,8 +182,8 @@ public class MainActivity extends AppCompatActivity
 
 
                     if (Integer.parseInt(editTextGreen.getText().toString()) > 255) {
-                        editTextGreenNum = 255;
-                        editTextGreen.setText("" + editTextGreenNum);
+                        green = 255;
+                        editTextGreen.setText("" + green);
                     }
                     String color = convertColorsToHex();
                     String opColor = inverseColor(color);
@@ -217,11 +215,11 @@ public class MainActivity extends AppCompatActivity
                         opColor = isAGrayColor(opColor);
                         textView.setBackgroundColor(Color.parseColor(color));
                         textView.setTextColor(Color.parseColor(opColor));
-                        editTextBlueNum = Integer.parseInt(editTextBlue.getText().toString());
-                        seekBarBlue.setProgress(editTextBlueNum);
+                        blue = Integer.parseInt(editTextBlue.getText().toString());
+                        seekBarBlue.setProgress(blue);
                     } else {
-                        editTextBlueNum = 255;
-                        seekBarBlue.setProgress(editTextBlueNum);
+                        blue = 255;
+                        seekBarBlue.setProgress(blue);
                     }
 
                 }catch (Exception e)
@@ -236,8 +234,8 @@ public class MainActivity extends AppCompatActivity
 
 
                     if (Integer.parseInt(editTextBlue.getText().toString()) > 255) {
-                        editTextBlueNum = 255;
-                        editTextBlue.setText("" + editTextBlueNum);
+                        blue = 255;
+                        editTextBlue.setText("" + blue);
                     }
                     String color = convertColorsToHex();
                     String opColor = inverseColor(color);
@@ -359,8 +357,6 @@ public class MainActivity extends AppCompatActivity
         btn = findViewById(R.id.button);
     }
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -408,7 +404,8 @@ public class MainActivity extends AppCompatActivity
             }
         }catch (Exception e)
         {
-            Toast toast = Toast.makeText(getApplicationContext(),"Please select which element´s color you want to change",  Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "Please select which element´s color you want to change",  Toast.LENGTH_SHORT);
             toast.show();
         }
 
@@ -486,4 +483,51 @@ public class MainActivity extends AppCompatActivity
         }
         return color;
     }
+
+    public void safePrefs()
+    {
+        sharedPreferences = getSharedPreferences("Settings Safed", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        // R/G/B values are stored.
+        try
+        {
+
+            editor.putInt("red", Integer.parseInt(editTextRed.getText().toString()));
+            editor.putInt("green", Integer.parseInt(editTextGreen.getText().toString()));
+            editor.putInt("blue", Integer.parseInt(editTextBlue.getText().toString()));
+            editor.putString("whichLayout", whichLayout);
+            // Saving CheckBox state
+            editor.putBoolean("checkboxChecked", checkBox.isChecked());
+            editor.apply();
+        }
+        catch(Exception e)
+        {
+            editor.putInt("red", 0);
+            editor.putInt("green", 0);
+            editor.putInt("blue", 0);
+            editor.putString("whichLayout", "");
+            // Saving CheckBox state
+            editor.putBoolean("checkboxChecked", false);
+            editor.apply();
+        }
+    }
+
+    public void initializePrefs()
+    {
+        try
+        {
+            red = sharedPreferences.getInt("red", red);
+            green = sharedPreferences.getInt("green", green);
+            blue = sharedPreferences.getInt("blue", blue);
+            whichLayout = sharedPreferences.getString("whichLayout", "");
+            checkboxChecked = sharedPreferences.getBoolean("checkboxChecked", checkboxChecked);
+        }
+        catch (Exception e)
+        {
+            safePrefs();
+        }
+
+    }
+
+
 }
