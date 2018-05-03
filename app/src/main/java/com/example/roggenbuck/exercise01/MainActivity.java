@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
 {
+    private ConstraintLayout constraintLayout;
     private EditText editTextRed, editTextGreen, editTextBlue;
     private SeekBar seekBarRed, seekBarGreen, seekBarBlue;
     private RadioGroup rgr;
@@ -48,6 +50,9 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         whichLayout = null;
+
+        // Initializing the layout
+        constraintLayout = findViewById(R.id.constraintLayout);
 
         // Initializing objects for RGB preferences.
         // First the EditTexts, because they come fist in layout.
@@ -81,6 +86,11 @@ public class MainActivity extends AppCompatActivity
 
             }
 
+
+            /*
+            What happens, if text text is changed. EditText and Seekbar of the same
+            color need to be synchronized.
+             */
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
             {
@@ -333,7 +343,6 @@ public class MainActivity extends AppCompatActivity
                     case R.id.radioBtnBgC:
                         whichLayout = getString(R.string.radioBtnBgC);
                         break;
-
                     case R.id.radioBtnTC:
                         whichLayout = getString(R.string.radioBtnTC);
                         break;
@@ -379,14 +388,15 @@ public class MainActivity extends AppCompatActivity
         try {
             switch (whichLayout) {
                 case "Background Color":
+                    constraintLayout.setBackgroundColor(Color.parseColor(color));
                     break;
                 case "Text Color":
                     String opColor = inverseColor(color);
-                    rdFABC.setTextColor(Color.parseColor(opColor));
-                    rdTc.setTextColor(Color.parseColor(opColor));
-                    rdBgC.setTextColor(Color.parseColor(opColor));
-                    rdBc.setTextColor(Color.parseColor(opColor));
-                    checkBox.setTextColor(Color.parseColor(opColor));
+                    rdFABC.setTextColor(Color.parseColor(color));
+                    rdTc.setTextColor(Color.parseColor(color));
+                    rdBgC.setTextColor(Color.parseColor(color));
+                    rdBc.setTextColor(Color.parseColor(color));
+                    checkBox.setTextColor(Color.parseColor(color));
                     break;
                 case "Button Color":
                     btn.setBackgroundColor(Color.parseColor(color));
@@ -404,6 +414,10 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    /*
+    I want to use HTML color codes as a string. This is the way,
+    one would use it in XML-files.
+     */
     public String convertColorsToHex(){
         String hexRed, hexGreen, hexBlue, hexColorCode;
         red = Integer.parseInt(editTextRed.getText().toString());
@@ -412,6 +426,8 @@ public class MainActivity extends AppCompatActivity
         hexRed = Integer.toHexString(red);
         hexGreen = Integer.toHexString(green);
         hexBlue = Integer.toHexString(blue);
+        // Fascinating, that comparison between 'hex' and 'dec' works.
+        // RGB values are always represented with 2 Bits.
         if(red<16){
             hexRed = "0" + hexRed;
         }
@@ -425,6 +441,10 @@ public class MainActivity extends AppCompatActivity
         return hexColorCode;
     }
 
+    /*
+    Calculating the opposite colors. These are the additive inverse numbers.
+    Subtracting both, must result in the neutral element (0).
+     */
     public String inverseColor(String originColor){
         String hexRed, hexGreen, hexBlue, hexColorCode;
         opRed = 255 - red;
@@ -447,6 +467,11 @@ public class MainActivity extends AppCompatActivity
         return hexColorCode;
     }
 
+    /*
+    This method is used, because the opposite color of gray,
+    is also gray. The text 'Color Preview' must be
+    readable every time.
+     */
     public String isAGrayColor(String color)
     {
         if(opRed == opBlue && opBlue == opGreen

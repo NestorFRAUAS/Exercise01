@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:id="@+id/constraintLayout"
     tools:context="com.example.roggenbuck.exercise01.MainActivity"
     tools:showIn="@layout/activity_main">
 
@@ -187,6 +188,7 @@
         android:layout_marginEnd="32dp"
         android:layout_marginTop="8dp"
         android:clickable="true"
+        android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button"
