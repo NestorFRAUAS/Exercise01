@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -35,9 +36,12 @@ public class MainActivity extends AppCompatActivity
     private TextView textView;
     private FloatingActionButton fab;
     private CheckBox checkBox;
+    private Snackbar snackbar;
     private Boolean checkboxChecked;
     private int red, green, blue;
     private int opRed, opGreen, opBlue;
+    private int indexRadiogroup;
+
     private String whichLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -47,6 +51,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
         whichLayout = null;
 
@@ -70,12 +75,24 @@ public class MainActivity extends AppCompatActivity
         // Initializing the CheckBox
         checkBox = findViewById(R.id.checkBox);
 
-        // TODO Shared Preferences
-        editTextRed.setText("0");
-        editTextBlue.setText("0");
-        editTextGreen.setText("0");
+        // Initializing preferences
+        initializePrefs();
+
+        editTextRed.setText("" + red);
+        editTextBlue.setText("" + blue);
+        editTextGreen.setText("" + green);
 
         fab = findViewById(R.id.floatingActionButton);
+        // Handle the snackbar, which automatically dismisses,
+        // if one is wiping to the right.
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Information. Wipe to the right to dismiss...",
+                        Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+            }
+        });
 
         editTextRed.addTextChangedListener(new TextWatcher()
         {
@@ -102,7 +119,6 @@ public class MainActivity extends AppCompatActivity
                         opColor = isAGrayColor(opColor);
                         textView.setBackgroundColor(Color.parseColor(color));
                         textView.setTextColor(Color.parseColor(opColor));
-                        red = Integer.parseInt(editTextRed.getText().toString());
                         seekBarRed.setProgress(red);
                     }
                     else
@@ -158,7 +174,6 @@ public class MainActivity extends AppCompatActivity
                         opColor = isAGrayColor(opColor);
                         textView.setBackgroundColor(Color.parseColor(color));
                         textView.setTextColor(Color.parseColor(opColor));
-                        green = Integer.parseInt(editTextGreen.getText().toString());
                         seekBarGreen.setProgress(green);
                     } else {
                         String color = convertColorsToHex();
@@ -215,7 +230,6 @@ public class MainActivity extends AppCompatActivity
                         opColor = isAGrayColor(opColor);
                         textView.setBackgroundColor(Color.parseColor(color));
                         textView.setTextColor(Color.parseColor(opColor));
-                        blue = Integer.parseInt(editTextBlue.getText().toString());
                         seekBarBlue.setProgress(blue);
                     } else {
                         blue = 255;
@@ -387,7 +401,6 @@ public class MainActivity extends AppCompatActivity
                     constraintLayout.setBackgroundColor(Color.parseColor(color));
                     break;
                 case "Text Color":
-                    String opColor = inverseColor(color);
                     rdFABC.setTextColor(Color.parseColor(color));
                     rdTc.setTextColor(Color.parseColor(color));
                     rdBgC.setTextColor(Color.parseColor(color));
@@ -486,12 +499,11 @@ public class MainActivity extends AppCompatActivity
 
     public void safePrefs()
     {
-        sharedPreferences = getSharedPreferences("Settings Safed", Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("com.example.roggenbuck.exercise01", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         // R/G/B values are stored.
         try
         {
-
             editor.putInt("red", Integer.parseInt(editTextRed.getText().toString()));
             editor.putInt("green", Integer.parseInt(editTextGreen.getText().toString()));
             editor.putInt("blue", Integer.parseInt(editTextBlue.getText().toString()));
@@ -499,6 +511,7 @@ public class MainActivity extends AppCompatActivity
             // Saving CheckBox state
             editor.putBoolean("checkboxChecked", checkBox.isChecked());
             editor.apply();
+
         }
         catch(Exception e)
         {
@@ -516,18 +529,45 @@ public class MainActivity extends AppCompatActivity
     {
         try
         {
-            red = sharedPreferences.getInt("red", red);
-            green = sharedPreferences.getInt("green", green);
-            blue = sharedPreferences.getInt("blue", blue);
+            sharedPreferences = getSharedPreferences("com.example.roggenbuck.exercise01", Context.MODE_PRIVATE);
+            red = sharedPreferences.getInt("red", 0);
+            green = sharedPreferences.getInt("green", 0);
+            blue = sharedPreferences.getInt("blue", 0);
             whichLayout = sharedPreferences.getString("whichLayout", "");
             checkboxChecked = sharedPreferences.getBoolean("checkboxChecked", checkboxChecked);
+            if(checkboxChecked)
+            {
+                checkBox.setChecked(true);
+            }
+            switch (whichLayout)
+            {
+
+                case "Background Color":
+                    indexRadiogroup = 0;
+                    break;
+                case "Text Color":
+                    indexRadiogroup = 1;
+                    break;
+                case "Button Color":
+                    indexRadiogroup = 2;
+                    break;
+                case "Floating Action Button Color":
+                    indexRadiogroup = 3;
+                    break;
+
+            }
+            rgr.setBottom(indexRadiogroup);
         }
         catch (Exception e)
         {
             safePrefs();
         }
-
     }
 
+    protected void onPause(Bundle savedInstanceState)
+    {
+        super.onPause();
+        safePrefs();
 
+    }
 }
