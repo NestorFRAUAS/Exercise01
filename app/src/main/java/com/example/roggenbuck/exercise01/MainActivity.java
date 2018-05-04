@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity
     private TextView textView;
     private FloatingActionButton fab;
     private CheckBox checkBox;
-    private Snackbar snackbar;
     private Boolean checkboxChecked;
     private int red, green, blue;
     private int opRed, opGreen, opBlue;
@@ -53,7 +52,6 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
-        whichLayout = null;
 
         // Initializing the layout
         constraintLayout = findViewById(R.id.constraintLayout);
@@ -72,15 +70,17 @@ public class MainActivity extends AppCompatActivity
         seekBarGreen = (SeekBar) findViewById(R.id.seekBarGreen);
         seekBarBlue = (SeekBar) findViewById(R.id.seekBarBlue);
 
+        // Initialize RadioGroups and -buttons.
+        rgr = findViewById(R.id.radioGroup);
+        rdBc = findViewById(R.id.radioBtnBC);
+        rdBgC = findViewById(R.id.radioBtnBgC);
+        rdTc = findViewById(R.id.radioBtnTC);
+        rdFABC = findViewById(R.id.radioBtnFABC);
+
         // Initializing the CheckBox
         checkBox = findViewById(R.id.checkBox);
 
-        // Initializing preferences
-        initializePrefs();
 
-        editTextRed.setText("" + red);
-        editTextBlue.setText("" + blue);
-        editTextGreen.setText("" + green);
 
         fab = findViewById(R.id.floatingActionButton);
         // Handle the snackbar, which automatically dismisses,
@@ -93,6 +93,20 @@ public class MainActivity extends AppCompatActivity
                 .setAction("Action", null).show();
             }
         });
+
+        // Initializing preferences
+        loadPrefs();
+
+        editTextRed.setText("" + red);
+        editTextBlue.setText("" + blue);
+        editTextGreen.setText("" + green);
+
+
+        rgr.check(indexRadiogroup);
+        seekBarRed.setProgress(red);
+        seekBarGreen.setProgress(green);
+        seekBarBlue.setProgress(blue);
+
 
         editTextRed.addTextChangedListener(new TextWatcher()
         {
@@ -341,12 +355,6 @@ public class MainActivity extends AppCompatActivity
         });
 
         // Handling RadioGroup / RadioButtons
-        rgr = findViewById(R.id.radioGroup);
-
-        rdBc = findViewById(R.id.radioBtnBC);
-        rdBgC = findViewById(R.id.radioBtnBgC);
-        rdTc = findViewById(R.id.radioBtnTC);
-        rdFABC = findViewById(R.id.radioBtnFABC);
 
         rgr.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -499,7 +507,8 @@ public class MainActivity extends AppCompatActivity
 
     public void safePrefs()
     {
-        sharedPreferences = getSharedPreferences("com.example.roggenbuck.exercise01", Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("com.example.roggenbuck.exercise01",
+                Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         // R/G/B values are stored.
         try
@@ -507,6 +516,7 @@ public class MainActivity extends AppCompatActivity
             editor.putInt("red", Integer.parseInt(editTextRed.getText().toString()));
             editor.putInt("green", Integer.parseInt(editTextGreen.getText().toString()));
             editor.putInt("blue", Integer.parseInt(editTextBlue.getText().toString()));
+            editor.putInt("indexRadiogroup", rgr.getCheckedRadioButtonId());
             editor.putString("whichLayout", whichLayout);
             // Saving CheckBox state
             editor.putBoolean("checkboxChecked", checkBox.isChecked());
@@ -519,44 +529,49 @@ public class MainActivity extends AppCompatActivity
             editor.putInt("green", 0);
             editor.putInt("blue", 0);
             editor.putString("whichLayout", "");
+            editor.putInt("indexRadiogroup", 0);
+
             // Saving CheckBox state
             editor.putBoolean("checkboxChecked", false);
             editor.apply();
         }
     }
 
-    public void initializePrefs()
+    public void loadPrefs()
     {
         try
         {
-            sharedPreferences = getSharedPreferences("com.example.roggenbuck.exercise01", Context.MODE_PRIVATE);
+            sharedPreferences = getSharedPreferences("com.example.roggenbuck.exercise01",
+                    Context.MODE_PRIVATE);
             red = sharedPreferences.getInt("red", 0);
             green = sharedPreferences.getInt("green", 0);
             blue = sharedPreferences.getInt("blue", 0);
+            indexRadiogroup = sharedPreferences.getInt("indexRadiogroup", 0);
             whichLayout = sharedPreferences.getString("whichLayout", "");
-            checkboxChecked = sharedPreferences.getBoolean("checkboxChecked", checkboxChecked);
+            checkboxChecked = sharedPreferences.getBoolean("checkboxChecked", false);
             if(checkboxChecked)
             {
                 checkBox.setChecked(true);
             }
+
             switch (whichLayout)
             {
 
                 case "Background Color":
-                    indexRadiogroup = 0;
+                    indexRadiogroup = R.id.radioBtnBgC;
                     break;
                 case "Text Color":
-                    indexRadiogroup = 1;
+                    indexRadiogroup = R.id.radioBtnTC;
                     break;
                 case "Button Color":
-                    indexRadiogroup = 2;
+                    indexRadiogroup = R.id.radioBtnBC;
                     break;
                 case "Floating Action Button Color":
-                    indexRadiogroup = 3;
+                    indexRadiogroup = R.id.radioBtnFABC;
                     break;
-
+                case "":
+                    break;
             }
-            rgr.setBottom(indexRadiogroup);
         }
         catch (Exception e)
         {
@@ -564,9 +579,13 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    protected void onPause(Bundle savedInstanceState)
+    @Override
+    protected void onPause()
     {
         super.onPause();
+        sharedPreferences = getSharedPreferences("com.example.roggenbuck.exercise01",
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         safePrefs();
 
     }
