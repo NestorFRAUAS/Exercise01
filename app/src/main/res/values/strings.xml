@@ -10,5 +10,7 @@
     <string name="radioBtnTC">Text Color</string>
     <string name="radioBtnBC">Button Color</string>
     <string name="radioBtnFABC">Floating Action Button Color</string>
+    <string name="buttonOk">OK</string>
+    <string name="buttonCancel">Cancel</string>
     <string name="button">Set Color</string>
 </resources>
