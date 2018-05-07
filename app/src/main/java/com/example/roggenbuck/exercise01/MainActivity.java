@@ -119,6 +119,13 @@ public class MainActivity extends AppCompatActivity
         seekBarBlue.setProgress(blue);
 
 
+        String color = convertColorsToHex();
+        String opColor = inverseColor(color);
+        opColor = isAGrayColor(opColor);
+        textView.setBackgroundColor(Color.parseColor(color));
+        textView.setTextColor(Color.parseColor(opColor));
+
+
         editTextRed.addTextChangedListener(new TextWatcher()
         {
             @Override
