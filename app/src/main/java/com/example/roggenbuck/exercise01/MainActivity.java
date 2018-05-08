@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity
     private TextView textView;
     private FloatingActionButton fab;
     private CheckBox checkBox;
+    public static Snackbar snackbar;
     private Boolean checkboxChecked;
     private int red, green, blue;
     private int opRed, opGreen, opBlue;
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 Intent intent = new Intent(MainActivity.this, AboutActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 2);
                 return false;
             }
         });
@@ -99,8 +101,8 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Information. Wipe to the right to dismiss...",
-                        Snackbar.LENGTH_LONG)
+                snackbar.make(view, "Information. Wipe to the right to dismiss...",
+                        Snackbar.LENGTH_INDEFINITE)
                 .setAction("Action", null).show();
             }
         });
@@ -118,6 +120,15 @@ public class MainActivity extends AppCompatActivity
         seekBarGreen.setProgress(green);
         seekBarBlue.setProgress(blue);
 
+
+        // Following lines of code are inspired by Andras Balázs Lajtha
+        // https://stackoverflow.com/questions/16163215/android-styling-seek-bar
+        seekBarRed.getProgressDrawable().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+        seekBarRed.getThumb().setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+        seekBarGreen.getProgressDrawable().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_IN);
+        seekBarGreen.getThumb().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_IN);
+        seekBarBlue.getProgressDrawable().setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_IN);
+        seekBarBlue.getThumb().setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_IN);
 
         String color = convertColorsToHex();
         String opColor = inverseColor(color);
@@ -606,5 +617,23 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences.Editor editor = sharedPreferences.edit();
         safePrefs();
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 2)
+        {
+            if (resultCode == 0) {
+                snackbar.make(constraintLayout, "About activity was closed using CANCEL.",
+                        Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+            if (resultCode == 1) {
+                snackbar.make(constraintLayout, "About activity was closed using OK.",
+                Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+        }
+        }
     }
 }

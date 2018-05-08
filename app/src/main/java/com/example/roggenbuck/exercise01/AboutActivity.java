@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,6 +16,7 @@ public class AboutActivity extends Activity {
     private String hexGreen;
     private String hexBlue;
     private String color;
+    private ConstraintLayout consLayAbAc;
 
 
     @Override
@@ -26,9 +29,9 @@ public class AboutActivity extends Activity {
         textViewHexColor.setBackgroundColor(Color.parseColor(color));
         String opColor = inverseColor(color);
         opColor = isAGrayColor(opColor);
-        // TODO
         textViewHexColor.setTextColor(Color.parseColor(opColor));
         textViewHexColor.append(convertDecToHex());
+        consLayAbAc = findViewById(R.id.consLayAbAc);
 
     }
 
@@ -142,10 +145,24 @@ public class AboutActivity extends Activity {
     }
 
     public void okButton(View view) {
+        setResult(1);
         finish();
+
     }
 
     public void cancelButton(View view) {
+        setResult(0);
         finish();
     }
+
+    @Override
+    public void onBackPressed()
+    {
+        Snackbar.make(consLayAbAc, "Close by pressing one of the buttons!",
+                Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+    }
 }
+
+//TODO Do not forget, to find an other attribute than LENGTH_LONG for the other SnackBars
+// Add logging to the App
