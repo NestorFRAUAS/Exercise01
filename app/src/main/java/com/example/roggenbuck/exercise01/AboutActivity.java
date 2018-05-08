@@ -1,16 +1,17 @@
 package com.example.roggenbuck.exercise01;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
-public class AboutActivity extends Activity {
+public class AboutActivity extends AppCompatActivity {
     private int red, green, blue, opRed, opGreen, opBlue;
     private String hexRed;
     private String hexGreen;
@@ -23,6 +24,10 @@ public class AboutActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about_activity);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         loadPrefs();
         TextView textViewHexColor = findViewById(R.id.textViewHexColor);
         color = convertColorsToHex();

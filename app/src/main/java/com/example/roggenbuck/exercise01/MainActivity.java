@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                snackbar.make(view, "Information. Wipe to the right to dismiss...",
+                Snackbar.make(view, "Information. Wipe to the right to dismiss...",
                         Snackbar.LENGTH_INDEFINITE)
                 .setAction("Action", null).show();
             }
@@ -625,12 +625,12 @@ public class MainActivity extends AppCompatActivity
         if(requestCode == 2)
         {
             if (resultCode == 0) {
-                snackbar.make(constraintLayout, "About activity was closed using CANCEL.",
+                Snackbar.make(constraintLayout, "About activity was closed using CANCEL.",
                         Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
             if (resultCode == 1) {
-                snackbar.make(constraintLayout, "About activity was closed using OK.",
+                Snackbar.make(constraintLayout, "About activity was closed using OK.",
                 Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
         }
