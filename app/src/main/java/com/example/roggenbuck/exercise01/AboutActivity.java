@@ -5,14 +5,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 public class AboutActivity extends Activity {
     private int red, green, blue, opRed, opGreen, opBlue;
-    private SharedPreferences sharedPreferences;
-    private TextView textViewHexColor;
-    private String hexRed, hexGreen, hexBlue,
-            hexColorCode, color;
+    private String hexRed;
+    private String hexGreen;
+    private String hexBlue;
+    private String color;
 
 
     @Override
@@ -20,14 +21,14 @@ public class AboutActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about_activity);
         loadPrefs();
-        textViewHexColor = findViewById(R.id.textViewHexColor);
+        TextView textViewHexColor = findViewById(R.id.textViewHexColor);
         color = convertColorsToHex();
         textViewHexColor.setBackgroundColor(Color.parseColor(color));
         String opColor = inverseColor(color);
         opColor = isAGrayColor(opColor);
         // TODO
         textViewHexColor.setTextColor(Color.parseColor(opColor));
-        textViewHexColor.setText("The selected color value is (R,G,B) = (");
+        textViewHexColor.append(convertDecToHex());
 
     }
 
@@ -35,7 +36,7 @@ public class AboutActivity extends Activity {
     {
         try
         {
-            sharedPreferences = getSharedPreferences("com.example.roggenbuck.exercise01",
+            SharedPreferences sharedPreferences = getSharedPreferences("com.example.roggenbuck.exercise01",
                     Context.MODE_PRIVATE);
             red = sharedPreferences.getInt("red", 0);
             green = sharedPreferences.getInt("green", 0);
@@ -83,7 +84,7 @@ public class AboutActivity extends Activity {
         if(opBlue<16){
             hexBlue = "0" + hexBlue;
         }
-        hexColorCode = "#" + hexRed + hexGreen + hexBlue;
+        String hexColorCode = "#" + hexRed + hexGreen + hexBlue;
         return hexColorCode;
     }
 
@@ -107,4 +108,44 @@ public class AboutActivity extends Activity {
         return color;
     }
 
+    public String convertDecToHex()
+    {
+        String hexVersion = "";
+        if(red < 16)
+        {
+            hexVersion = "(" + 0  + Integer.toHexString(red);
+        }
+        else
+        {
+            hexVersion += "(" + Integer.toHexString(red);
+        }
+        hexVersion += ",";
+
+        if(green < 16)
+        {
+            hexVersion = 0 + "" + Integer.toHexString(green);
+        }
+        else
+        {
+            hexVersion +=  Integer.toHexString(green);
+        }
+        hexVersion += ",";
+        if(blue < 16)
+        {
+            hexVersion += 0 + "" + Integer.toHexString(blue);
+        }
+        else
+        {
+            hexVersion += Integer.toHexString(blue) + ")";
+        }
+        return hexVersion;
+    }
+
+    public void okButton(View view) {
+        finish();
+    }
+
+    public void cancelButton(View view) {
+        finish();
+    }
 }

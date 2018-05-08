@@ -13,4 +13,5 @@
     <string name="buttonOk">OK</string>
     <string name="buttonCancel">Cancel</string>
     <string name="button">Set Color</string>
+    <string name="hexaVers">"The selected color value is (R,G,B) =</string>
 </resources>
