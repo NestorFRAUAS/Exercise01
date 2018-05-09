@@ -167,6 +167,8 @@ public class AboutActivity extends AppCompatActivity {
                 Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
     }
+
+
 }
 
 //TODO Do not forget, to find an other attribute than LENGTH_LONG for the other SnackBars

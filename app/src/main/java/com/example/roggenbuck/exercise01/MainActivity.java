@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -43,6 +45,8 @@ public class MainActivity extends AppCompatActivity
     private int red, green, blue;
     private int opRed, opGreen, opBlue;
     private int indexRadiogroup;
+    private SensorManager sensorManager;
+    private Sensor sensor;
 
     private String whichLayout;
     @Override
