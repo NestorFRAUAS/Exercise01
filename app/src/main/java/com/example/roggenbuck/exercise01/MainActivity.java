@@ -7,8 +7,12 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Debug;
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,7 +33,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends AppCompatActivity implements SensorEventListener
 {
     private SharedPreferences sharedPreferences;
     private ConstraintLayout constraintLayout;
@@ -45,8 +50,12 @@ public class MainActivity extends AppCompatActivity
     private int red, green, blue;
     private int opRed, opGreen, opBlue;
     private int indexRadiogroup;
+    private float sensorX, sensorY;
     private SensorManager sensorManager;
     private Sensor sensor;
+    private SensorEvent sensorEvent;
+    private SensorEventListener sensorEventListener;
+    private int selectedTextView;
 
     private String whichLayout;
     @Override
@@ -114,6 +123,7 @@ public class MainActivity extends AppCompatActivity
         // Initializing preferences
         loadPrefs();
 
+
         editTextRed.setText("" + red);
         editTextBlue.setText("" + blue);
         editTextGreen.setText("" + green);
@@ -139,6 +149,15 @@ public class MainActivity extends AppCompatActivity
         opColor = isAGrayColor(opColor);
         textView.setBackgroundColor(Color.parseColor(color));
         textView.setTextColor(Color.parseColor(opColor));
+
+        // Initialize the sensor manager
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        selectedTextView = 0;
+
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+
 
 
         editTextRed.addTextChangedListener(new TextWatcher()
@@ -639,5 +658,100 @@ public class MainActivity extends AppCompatActivity
                 .setAction("Action", null).show();
         }
         }
+    }
+
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+
+        final float alpha = (float) 0.8;
+        float[] gravity = {0,0,0};
+
+        int i = 0;
+        if(checkboxChecked)
+        {
+            gravity[0] = alpha * gravity[0] + (1 - alpha) * sensorEvent.values[0];
+            gravity[1] = alpha * gravity[1] + (1 - alpha) * sensorEvent.values[1];
+            gravity[2] = alpha * gravity[2] + (1 - alpha) * sensorEvent.values[2];
+
+            float[] linear_acceleration = {0,0,0};
+            linear_acceleration[0] = sensorEvent.values[0] - gravity[0];
+            linear_acceleration[1] = sensorEvent.values[1] - gravity[1];
+            linear_acceleration[2] = sensorEvent.values[2] - gravity[2];
+
+            float[] checksXDirection = new float[100];
+            float[] checksZDirection = new float[100];
+
+            boolean xPlus, xMinus, zMinus, zPlus;
+
+            checksXDirection[i] = linear_acceleration[0];
+            checksZDirection[i] = linear_acceleration[2];
+
+
+                i = (i+1) % 100;
+
+            // Values are getting bigger
+            // With logging I think this means movement to the left.
+            if(checksXDirection[i] > checksXDirection[i-1])
+            {
+                // Decrease selected value
+
+            }
+            // Values are getting bigger
+            // With logging I think this means movement to the right.
+            if(checksXDirection[i] < checksXDirection[i-1])
+            {
+                // Increase selected value
+            }
+            // Values are getting bigger
+            // With logging I think this means upwards movement
+            if(checksZDirection[i] > checksZDirection[i-1])
+            {
+                // Go upwards for the selection
+                selectedTextView++;
+                selectedTextView %= 3;
+                highlightRGBTextViews(selectedTextView);
+            }
+            // Values are getting smaller
+            // With logging I think this means downwards movement
+            if(checksZDirection[i] < checksZDirection[i-1])
+            {
+                // Go downwards for the selection
+                selectedTextView--;
+                if(selectedTextView < 0)
+                {
+                    selectedTextView *= -1;
+                }
+                selectedTextView %= 3;
+                highlightRGBTextViews(selectedTextView);
+            }
+
+
+            Log.d("x=", "" + linear_acceleration[0]);
+            Log.d("z=", "" + linear_acceleration[2]);
+
+        }
+
+
+    }
+
+    public void highlightRGBTextViews(int selectedTextView)
+    {
+        switch (selectedTextView) {
+            case 0:
+                editTextRed.requestFocus();
+                break;
+            case 1:
+                editTextGreen.requestFocus();
+                break;
+            case 2:
+                editTextBlue.requestFocus();
+                break;
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
     }
 }
