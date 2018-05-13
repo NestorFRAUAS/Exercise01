@@ -663,8 +663,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-
-        final float alpha = (float) 0.8;
+        /*
+        final float alpha = 0.8f;
         float[] gravity = {0,0,0};
 
         int i = 0;
@@ -674,6 +674,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             gravity[1] = alpha * gravity[1] + (1 - alpha) * sensorEvent.values[1];
             gravity[2] = alpha * gravity[2] + (1 - alpha) * sensorEvent.values[2];
 
+
+
             float[] linear_acceleration = {0,0,0};
             linear_acceleration[0] = sensorEvent.values[0] - gravity[0];
             linear_acceleration[1] = sensorEvent.values[1] - gravity[1];
@@ -682,7 +684,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             float[] checksXDirection = new float[100];
             float[] checksZDirection = new float[100];
 
-            boolean xPlus, xMinus, zMinus, zPlus;
 
             checksXDirection[i] = linear_acceleration[0];
             checksZDirection[i] = linear_acceleration[2];
@@ -710,7 +711,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 // Go upwards for the selection
                 selectedTextView++;
                 selectedTextView %= 3;
-                highlightRGBTextViews(selectedTextView);
             }
             // Values are getting smaller
             // With logging I think this means downwards movement
@@ -723,20 +723,23 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     selectedTextView *= -1;
                 }
                 selectedTextView %= 3;
-                highlightRGBTextViews(selectedTextView);
             }
 
-
-            Log.d("x=", "" + linear_acceleration[0]);
-            Log.d("z=", "" + linear_acceleration[2]);
-
+            highlightRGBTextViews(selectedTextView);
+            if(!(linear_acceleration[0] == 0.0 || linear_acceleration[2] == 0.0))
+            {
+                Log.d("x=", "" + linear_acceleration[0]);
+                Log.d("z=", "" + linear_acceleration[2]);
+            }
+            Log.d("New line", "\n");
         }
 
-
+            */
     }
 
     public void highlightRGBTextViews(int selectedTextView)
     {
+        /*
         switch (selectedTextView) {
             case 0:
                 editTextRed.requestFocus();
@@ -748,6 +751,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 editTextBlue.requestFocus();
                 break;
         }
+        */
     }
 
     @Override
